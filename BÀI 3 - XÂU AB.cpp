@@ -6,31 +6,14 @@
 using namespace std;
 typedef long long ll;
 
-vector<vector<ll>> C(61, vector<ll>(61, -1));
-
 ll Ckn(ll n, ll k) {
     if (k < 0 || k > n) return 0;
-    if (C[n][k] != -1) return C[n][k];
-    if (k == 0 || k == n) return C[n][k] = 1;
-    return C[n][k] = Ckn(n - 1, k - 1) + Ckn(n - 1, k);
-}
-
-string findKthString(ll a, ll b, ll k) {
-    string result;
-    while (a > 0 && b > 0) {
-        ll cnt = Ckn(a + b - 1, a - 1);
-        if (k <= cnt) {
-            result += 'a';
-            a--;
-        } else {
-            result += 'b';
-            k -= cnt;
-            b--;
-        }
+    if (k > n - k) k = n - k;
+    ll tmp = 1;
+    for(int i = 1; i <= k; i++){
+        tmp = tmp * (n - k + i) / i;
     }
-    result += string(a, 'a');
-    result += string(b, 'b');
-    return result;
+    return tmp;
 }
 
 int main() {
@@ -40,6 +23,19 @@ int main() {
     
     ll a, b, k;
     cin >> a >> b >> k;
-    cout << findKthString(a, b, k);
+    string res;
+    while (a > 0 && b > 0) {
+        ll cnt = Ckn(a + b - 1, a - 1);
+        if (k <= cnt) {
+            res += 'a';
+            a--;
+        } else {
+            res += 'b';
+            k -= cnt;
+            b--;
+        }
+    }
+    res += string(a, 'a') + string(b, 'b');
+    cout << res;
     return 0;
 }
